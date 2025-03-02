@@ -1,75 +1,94 @@
-import fsPromises from 'fs/promises';
-import path from 'path';
 import {Animal} from "../models/animal";
+import AnimalController from "../controllers/AnimalsController";
 
-const filePath: string = path.resolve('data', 'animal.ts');
-
-
-
-const AnimalsService = {
-    async readAnimalsFromFile(): Promise<Animal[]> {
-        const data: string = await fsPromises.readFile(filePath, 'utf-8');
-        return JSON.parse(data) as Animal[];
-    },
-
-    async getAllAnimals(): Promise<Animal[]> {
-        return await this.readAnimalsFromFile();
-    },
-
-    async getAnimalById(id: number): Promise<Animal> {
-        const animals = await this.readAnimalsFromFile();
-        const animal = animals.find(a => a.id === id);
-        if (!animal) {
-            throw new Error(`Animal with id ${id} not found.`);
-        }
-        return animal;
-    },
-
-    async getEndangeredAnimals(): Promise<Animal[]> {
-        const animals = await this.readAnimalsFromFile();
-        return animals.filter(a => a.isEndangered);
-    },
-
-    async getAnimalsByHabitat(habitat: string): Promise<Animal[]> {
-        const animals = await this.readAnimalsFromFile();
-        return animals.filter(a => a.habitat.toLowerCase() === habitat.toLowerCase());
-    },
-
-    async getAnimalsBySpecies(species: string): Promise<Animal[]> {
-        const animals = await this.readAnimalsFromFile();
-        return animals.filter(a => a.species.toLowerCase() === species.toLowerCase());
-    },
-
-    async addAnimal(newAnimal: Omit<Animal, 'id'>): Promise<Animal> {
-        const animals = await this.readAnimalsFromFile();
-        const id = animals.length ? animals[animals.length - 1].id + 1 : 1;
-        const animal: Animal = { id, ...newAnimal };
-        animals.push(animal);
-        await fsPromises.writeFile(filePath, JSON.stringify(animals, null, 2), 'utf-8');
-        return animal;
-    },
-
-    async updateAnimal(id: number, updates: Partial<Animal>): Promise<Animal> {
-        const animals = await this.readAnimalsFromFile();
-        const index = animals.findIndex(a => a.id === id);
-        if (index === -1) {
-            throw new Error(`Animal with id ${id} not found.`);
-        }
-        animals[index] = { ...animals[index], ...updates };
-        await fsPromises.writeFile(filePath, JSON.stringify(animals, null, 2), 'utf-8');
-        return animals[index];
-    },
-
-    async deleteAnimal(id: number): Promise<{ message: string }> {
-        const animals = await this.readAnimalsFromFile();
-        const index = animals.findIndex(a => a.id === id);
-        if (index === -1) {
-            throw new Error(`Animal with id ${id} not found.`);
-        }
-        animals.splice(index, 1);
-        await fsPromises.writeFile(filePath, JSON.stringify(animals, null, 2), 'utf-8');
-        return { message: `Animal with id ${id} has been removed.` };
+class AnimalService{
+    private animals: Array<Animal> = [
+        {
+            id: 1,
+            name: "Simba",
+            species: "Lion",
+            age: 5,
+            isEndangered: true,
+            habitat: "Savanna"
+        },
+        {
+            id: 2,
+            name: "Nemo",
+            species: "Clownfish",
+            age: 2,
+            isEndangered: false,
+            habitat: "Ocean"
+        },
+    ]
+    GetAllAnimals(): Array<Animal>{
+        return this.animals
     }
-};
+    GetAllAnimalsEndagered(): Array<Animal>{
+        let EndageredAnimals: Array<Animal> = []
+        for(let i: number = 0; i < this.animals.length; i++){
+            if(this.animals[i]["isEndangered"]){
+                EndageredAnimals.push(this.animals[i])
+            }
+        }
+        return EndageredAnimals
+    }
+    GetAllAnimalsInHabitat(habitat: string): Array<Animal>{
+        let HabitatAnimals: Array<Animal> = [];
 
-export default AnimalsService;
+        for(let i = 0; i < this.animals.length; i++){
+            if(this.animals[i]["habitat"] === habitat){
+                HabitatAnimals.push(this.animals[i])
+            }
+        }
+        return HabitatAnimals
+    }
+    GetAllAnimalsSpecies(species: string): Array<Animal>{
+        let SpeciesAnimals: Array<Animal> = [];
+        console.log(species)
+        for(let i = 0; i < this.animals.length; i++){
+            if(this.animals[i]["species"] === species){
+                console.log(this.animals[i])
+                SpeciesAnimals.push(this.animals[i])
+            }
+        }
+        console.log(SpeciesAnimals)
+        return SpeciesAnimals
+    }
+    PostNewAnimal(AnimalNew: Animal): Animal{
+        const newAnimal: Animal ={
+            id: this.animals.length+1,
+            name: AnimalNew.name,
+            species: AnimalNew.species,
+            age: AnimalNew.age,
+            isEndangered: AnimalNew.isEndangered,
+            habitat: AnimalNew.habitat
+        }
+        this.animals.push(newAnimal)
+        return newAnimal
+    }
+    UpdateAnimal(id:number, animal: Animal): Animal | null{
+        const animalIndex: number = this.animals.findIndex(animal => animal.id === id)
+        if(animalIndex === -1){
+            return null
+        }
+        const UpdatedAnimal: Animal ={
+            id,
+            name: animal.name,
+            species: animal.species,
+            age: animal.age,
+            isEndangered: animal.isEndangered,
+            habitat: animal.habitat
+        }
+        this.animals[animalIndex] = {...this.animals[animalIndex], ...UpdatedAnimal}
+        return UpdatedAnimal
+    }
+    DeleteAnimal(id:number): Boolean{
+        const animalIndex: number = this.animals.findIndex(animal => animal.id === id)
+        if(animalIndex === -1){
+            return false
+        }
+        this.animals.splice(animalIndex, 1)
+        return true
+    }
+}
+export const animalService = new AnimalService()

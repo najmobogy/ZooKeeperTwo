@@ -1,17 +1,17 @@
-### Pobierz wszystkie zwierzęta
-GET http://localhost:3000/animals
+### GET request to example server
+GET https://examples.http-client.intellij.net/get
+    ?generated-in=WebStorm
+
+###
+
+### Wszystkie zwierzte
+GET http://localhost:3000/
 Content-Type: application/json
 
 ###
 
-### Pobierz zwierzę o konkretnym ID
-GET http://localhost:3000/animals/1
-Content-Type: application/json
-
-###
-
-### Pobierz wszystkie zagrożone wyginięciem zwierzęta
-GET http://localhost:3000/animals/endangered
+### Pobierz wszystkie zagrożone zwierzęta
+GET http://localhost:3000/endangered
 Content-Type: application/json
 
 ###
@@ -22,7 +22,7 @@ Content-Type: application/json
 
 ###
 
-### Pobierz zwierzęta o określonym gatunku (przykład: wszystkie lwy)
+### Pobierz zwierzęta o określonym gatunku
 GET http://localhost:3000/animals/species?species=Lion
 Content-Type: application/json
 
@@ -55,7 +55,7 @@ Content-Type: application/json
 
 ###
 
-### Usuń zwierzę o konkretnym ID (np. id 2)
+### Usuń zwierzę o konkretnym ID
 DELETE http://localhost:3000/animals/2
 Content-Type: application/json
 
