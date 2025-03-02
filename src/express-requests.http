@@ -1,5 +1,62 @@
-### GET request to example server
-GET https://examples.http-client.intellij.net/get
-    ?generated-in=WebStorm
+### Pobierz wszystkie zwierzęta
+GET http://localhost:3000/animals
+Content-Type: application/json
+
+###
+
+### Pobierz zwierzę o konkretnym ID
+GET http://localhost:3000/animals/1
+Content-Type: application/json
+
+###
+
+### Pobierz wszystkie zagrożone wyginięciem zwierzęta
+GET http://localhost:3000/animals/endangered
+Content-Type: application/json
+
+###
+
+### Pobierz zwierzęta z określonego środowiska
+GET http://localhost:3000/animals/habitat/Savanna
+Content-Type: application/json
+
+###
+
+### Pobierz zwierzęta o określonym gatunku (przykład: wszystkie lwy)
+GET http://localhost:3000/animals/species?species=Lion
+Content-Type: application/json
+
+###
+
+### Dodaj nowe zwierzę
+POST http://localhost:3000/animals
+Content-Type: application/json
+
+{
+  "name": "Dory",
+  "species": "Blue Tang",
+  "age": 3,
+  "isEndangered": false,
+  "habitat": "Ocean"
+}
+
+###
+
+### Zaktualizuj istniejące zwierzę (np. id 1)
+PUT http://localhost:3000/animals/1
+Content-Type: application/json
+
+{
+  "name": "Simba",
+  "age": 6,
+  "isEndangered": false,
+  "habitat": "Savanna"
+}
+
+###
+
+### Usuń zwierzę o konkretnym ID (np. id 2)
+DELETE http://localhost:3000/animals/2
+Content-Type: application/json
 
 ###
