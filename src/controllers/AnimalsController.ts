@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import animalsService from '../services/AnimalsService.ts';
+import animalsService from '../services/AnimalsService';
 
 const AnimalsController = {
     getAllAnimals: async (req: Request, res: Response): Promise<void> => {
